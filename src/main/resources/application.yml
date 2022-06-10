@@ -1,0 +1,18 @@
+micronaut:
+  application:
+    name: sidMock
+  server:
+    port: 6666
+netty:
+  default:
+    allocator:
+      max-order: 3
+
+redis:
+  uri: redis://localhost
+
+sid-mock:
+  delay: 1s
+  expiration: 5m
+  trust-store-path: classpath:sid-mock-ts.jks
+

@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  sid-mock-service:
+    image: local:sid-mock
+    networks:
+      - sid-mock-network
+    depends_on:
+      redis-service:
+        condition: service_started
+    ports:
+      - "6666:6666"
+    environment:
+      - REDIS_URI=redis://redis-service
+
+  redis-service:
+    image: "redis:alpine"
+    networks:
+      - sid-mock-network
+
+networks:
+  sid-mock-network:
