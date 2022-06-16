@@ -90,8 +90,10 @@ public class DataProvider {
             Enumeration<String> enumeration = keystore.aliases();
             while (enumeration.hasMoreElements()) {
                 String alias = enumeration.nextElement();
-                X509Certificate certificate = (X509Certificate) keystore.getCertificate(alias);
-                certificates.put(alias, Base64.getEncoder().encodeToString(certificate.getEncoded()));
+                if (!Objects.equals(alias, "sid-mock-key")) {
+                    X509Certificate certificate = (X509Certificate) keystore.getCertificate(alias);
+                    certificates.put(alias, Base64.getEncoder().encodeToString(certificate.getEncoded()));
+                }
             }
         } catch (IOException | KeyStoreException | CertificateException | NoSuchAlgorithmException e) {
             throw new Exception("Error retrieving certificates", e);

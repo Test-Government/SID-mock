@@ -43,14 +43,15 @@ public class ResponseData {
         Map<String, Object> jsonBody = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
 
-        if (!DataProvider.usersMapping.containsKey(identifier) && !Objects.equals(identifier, "PNOLV-010404-29982")) {
+        if (!DataProvider.usersMapping.containsKey(identifier)) {
             throw new NotFoundException("User not found");
         }
         DataProvider.UserResponseType expectedResult = DataProvider.usersMapping.get(identifier);
 
         if (expectedResult == DataProvider.UserResponseType.OK) {
 
-            String certificate = DataProvider.certificates.get(identifier.toLowerCase());
+            String certificate = DataProvider.certificates.get(
+                    String.format("%s-mock-q.auth", identifier.toLowerCase()));
 
             result.put("endResult", "OK");
             result.put("documentNumber", identifier);
