@@ -2,18 +2,41 @@
 
 Java application to act as local replacement for [SID DEMO](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters#demo-parameters)
 
+
 ## Mocked endpoints
 
 * POST /smart-id-rp/v2/authentication/etsi/{identifier}
 * GET /smart-id-rp/v2/session/{sessionId}
 
+
 ## Usage
+1. Download repo
+2. Build image
+```
+# building local SID mock image
+docker build -t local:sid-mock .
+```
+3. Run image
+```
+# running SID mock
+docker compose up 
+# or
+docker compose up sid-mock-service 
+```
+**Note:** docker-compose is using "local:sid-mock" as image name
 
 
-## Users
-Predefined users list should match [SID DEMO test accounts list](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters#accounts)
+## MockData (Users)
+Predefined users list should mostly match [SID DEMO test accounts list](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters#accounts) 
+with the following exceptions:
 
-**NOTE!** Currently all "OK" users are replaced with PNOLV-010404-29982
+Missing users:
+* PNOLT-49912318881
+* PNOLV-311299-18886
+
+Additional users:
+* PNOBB-30303039903
+* PNOIS-30303039903
 
 ### Configuration
 It is possible to edit or override predefined users list and their responses.
@@ -40,6 +63,16 @@ For this, there are the following endpoints:
 | Method | Action                          |
 |--------|---------------------------------|
 | GET    | Reset users to predefined list. |
+
+
+## Development
+#### Continuous building during development
+
+**Precondition:** Redis is running on default port (6379).
+```
+./gradlew run -t
+```
+
 
 ## TODO list:
 * Logging
