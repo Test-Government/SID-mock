@@ -10,9 +10,11 @@ import io.micronaut.http.annotation.PathVariable;
 import io.micronaut.http.annotation.QueryValue;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller("/smart-id-rp/v2/session/{sessionId}")
 public class SessionStatus {
@@ -20,17 +22,22 @@ public class SessionStatus {
 
     @Get(produces = MediaType.APPLICATION_JSON)
     public HttpResponse<Map<String, Object>> sessionStatus(@PathVariable String sessionId, @QueryValue long timeoutMs) {
+        log.info("Received status check request for session id '{}'", sessionId);
         try {
+            Map<String, Object> responseData = dataProvider.getResponseData(sessionId, timeoutMs);
+            log.info("Session status found for session id '{}'", sessionId);
             return HttpResponse.ok(
-                    dataProvider.getResponseData(sessionId, timeoutMs)
+                    responseData
             );
         } catch (NotFoundException e) {
+            log.info("Session not found for session id '{}'", sessionId);
             return HttpResponse.notFound(
                     CollectionUtils.mapOf(
                             "code", 404,
                             "message", "Not Found"
                     ));
         } catch (Exception e) {
+            log.error("Unable to create authentication response", e);
             return HttpResponse.serverError(
                     CollectionUtils.mapOf(
                             "error", e.getMessage()
