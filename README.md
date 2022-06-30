@@ -43,7 +43,7 @@ It is possible to edit or override predefined users list and their responses.
 
 For this, there are the following endpoints:
 
-#### /user/{identifier}
+#### /users/{identifier}
 | Method | Action                                    |
 |--------|-------------------------------------------|
 | GET    | Get user.                                 |

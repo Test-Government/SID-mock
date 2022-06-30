@@ -1,5 +1,5 @@
 applicationType: default
-defaultPackage: ee.sk.sid
+defaultPackage: ee.test_gov.sid.mock
 testFramework: spock
 sourceLanguage: java
 buildTool: gradle

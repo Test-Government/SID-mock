@@ -1,10 +1,11 @@
-package ee.sk.sid.data;
+package ee.test_gov.sid.mock.data;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import ee.sk.smartid.AuthenticationResponseValidator;
+import ee.test_gov.sid.mock.config.SidMockProperties;
 import io.lettuce.core.api.StatefulRedisConnection;
 import jakarta.inject.Singleton;
 import javassist.NotFoundException;

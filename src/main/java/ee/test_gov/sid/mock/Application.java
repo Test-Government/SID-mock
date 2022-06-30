@@ -1,4 +1,4 @@
-package ee.sk.sid;
+package ee.test_gov.sid.mock;
 
 import io.micronaut.runtime.Micronaut;
 

@@ -1,6 +1,6 @@
-package ee.sk.sid.controller;
+package ee.test_gov.sid.mock.config.controller;
 
-import ee.sk.sid.data.DataProvider;
+import ee.test_gov.sid.mock.data.DataProvider;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;

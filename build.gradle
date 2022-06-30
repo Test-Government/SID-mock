@@ -5,7 +5,7 @@ plugins {
 }
 
 version = "0.1"
-group = "ee.sk.sid"
+group = "ee.test_gov.sid.mock"
 
 repositories {
     mavenCentral()
@@ -28,7 +28,7 @@ dependencies {
 
 
 application {
-    mainClass.set("ee.sk.sid.Application")
+    mainClass.set("ee.test_gov.sid.mock.Application")
 }
 java {
     sourceCompatibility = JavaVersion.toVersion("17")
@@ -41,7 +41,7 @@ micronaut {
     testRuntime("spock2")
     processing {
         incremental(true)
-        annotations("ee.sk.sid.*")
+        annotations("ee.test_gov.sid.mock.*")
     }
 }
 

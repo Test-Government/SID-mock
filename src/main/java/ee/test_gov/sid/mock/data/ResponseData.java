@@ -1,4 +1,4 @@
-package ee.sk.sid.data;
+package ee.test_gov.sid.mock.data;
 
 import ee.sk.smartid.HashType;
 import javassist.NotFoundException;
@@ -8,7 +8,6 @@ import java.security.Signature;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 
 public class ResponseData {

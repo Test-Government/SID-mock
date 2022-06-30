@@ -15,4 +15,4 @@ FROM docker.io/openjdk:17 as app
 RUN mkdir /app
 COPY --from=build /home/gradle/src/build/libs/*all.jar /app/sid-mock.jar
 EXPOSE 6666
-ENTRYPOINT java -jar /app/sid-mock.jar
+ENTRYPOINT java -Dmicronaut.config.files=$MOCK_CONFIGURATION_PATH -jar /app/sid-mock.jar
