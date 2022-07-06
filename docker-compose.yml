@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   sid-mock-service:
-    image: local:sid-mock
+    image: nortal/sid-mock:latest
     networks:
       - sid-mock-network
     depends_on:
