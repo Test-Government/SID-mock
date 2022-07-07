@@ -74,13 +74,5 @@ For this, there are the following endpoints:
 ```
 
 
-## TODO list:
-* Logging
-* Add tests
-* Updating/overriding certificates without the need to rebuild application
-* Option to overload default users.json via file on application start
-* Private identifier endpoint support (in addition to ETSI)
-* Documentnumber endpoint support (in addition to ETSI)
-* Signing support (in addition to authentication)
-* Relying Party restriction capability
-* On TIMEOUT use actual(configurable) timeout time instead of common delay
+## Improvements 
+Listed under [GitHub issues](https://github.com/Test-Government/SID-mock/labels/enhancement)
