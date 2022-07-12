@@ -151,6 +151,43 @@ public class DataProvider {
         } catch (JsonProcessingException e) {
             throw new Exception("Unable to parse stored response", e);
         }
+    }
 
+    public void putRequestData(String Identifier, AuthenticationInitData inputData) throws JsonProcessingException {
+        if (sidMockProperties.storeAuthRequests()) {
+            JsonMapper jsonMapper = new JsonMapper();
+            String response = jsonMapper.writeValueAsString(inputData);
+            this.redisConnection.sync().set(
+                    Identifier + "_Auth",
+                    response,
+                    ex(sidMockProperties.expiration())
+            );
+            this.redisConnection.sync().set(
+                    "LatestAuthRequest",
+                    response,
+                    ex(sidMockProperties.expiration())
+            );
+        }
+    }
+
+    public Map<String, Object> getRequestData() throws Exception {
+        return fetchRequestData("LatestAuthRequest");
+    }
+
+    public Map<String, Object> getRequestData(String identifier) throws Exception {
+        return fetchRequestData(identifier + "_Auth");
+    }
+
+    private Map<String, Object> fetchRequestData(String key) throws Exception {
+        String redisResponseData = this.redisConnection.sync().get(key);
+        if (redisResponseData == null) {
+            throw new NotFoundException("Latest request not found");
+        }
+        JsonMapper jsonMapper = new JsonMapper();
+        try {
+            return jsonMapper.readValue(redisResponseData, Map.class);
+        } catch (JsonProcessingException e) {
+            throw new Exception("Unable to parse stored request", e);
+        }
     }
 }
