@@ -8,23 +8,18 @@ Built Docker images are pushed to [Docker Hub](https://hub.docker.com/repository
 * POST /smart-id-rp/v2/authentication/etsi/{identifier}
 * GET /smart-id-rp/v2/session/{sessionId}
 
-
 ## Usage
-1. Download repo
-2. Build image
-```
-# building local SID mock image
-docker build -t local:sid-mock .
-```
-3. Run image
+### Requirements
+* Docker
+* Docker Compose
+
+### Using image from Docker Hub
 ```
 # running SID mock
 docker compose up 
 # or
 docker compose up sid-mock-service 
 ```
-**Note:** docker-compose is using "local:sid-mock" as image name
-
 
 ## MockData (Users)
 Predefined users list should mostly match [SID DEMO test accounts list](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters#accounts) 
@@ -66,13 +61,32 @@ For this, there are the following endpoints:
 
 
 ## Development
-#### Continuous building during development
-
-**Precondition:** Redis is running on default port (6379).
+### Requirements
+* Java  17
+* Redis is running on default port (6379).
+    ```
+    docker run -p 6379:6379 redis 
+    ```
+### Continuous building during development
 ```
 ./gradlew run -t
 ```
 
+### Build Docker image locally
+1. Download repo
+2. Build image
+```
+# building local SID mock image
+docker build -t nortal/sid-mock:latest .
+```
+3. Run image
+```
+# running SID mock
+docker compose up 
+# or
+docker compose up sid-mock-service 
+```
+**Note:** docker-compose is using "nortal/sid-mock:latest" as image name
 
 ## Improvements 
 Listed under [GitHub issues](https://github.com/Test-Government/SID-mock/labels/enhancement)
