@@ -27,6 +27,12 @@ public class AuthenticationSession {
     public HttpResponse<Map<String, Object>> authenticationSession(@PathVariable String identifier, @Body AuthenticationInitData body) {
         UUID sessionId = UUID.randomUUID();
         log.info("Received request to authenticate '{}' with session id '{}'", identifier, sessionId);
+
+        try {
+            dataProvider.putRequestData(identifier, body);
+        } catch (Exception e) {
+            log.error("Failed to store request", e);
+        }
         try {
             dataProvider.putResponseData(sessionId, identifier, body);
             log.info("Response stored for '{}' authentication with session id '{}'", identifier, sessionId);

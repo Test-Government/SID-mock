@@ -1,6 +1,5 @@
 package ee.test_gov.sid.mock.config.controller;
 
-import ee.test_gov.sid.mock.data.UserInfo;
 import ee.test_gov.sid.mock.data.DataProvider;
 import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpResponse;
@@ -30,9 +29,8 @@ public class User {
                 ));
     }
 
-    @Put(consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
-    public HttpResponse<Map<String, Object>> addUser(@PathVariable String identifier, @Body UserInfo body) {
-
+    @Put(consumes = MediaType.TEXT_PLAIN, produces = MediaType.APPLICATION_JSON)
+    public HttpResponse<Map<String, Object>> addUser(@PathVariable String identifier, @Body DataProvider.UserResponseType body) {
         if (DataProvider.usersMapping.containsKey(identifier)) {
             return HttpResponse.serverError(
                     CollectionUtils.mapOf(
@@ -40,7 +38,7 @@ public class User {
                     ));
         }
         try {
-            DataProvider.usersMapping.put(identifier, body.responseType);
+            DataProvider.usersMapping.put(identifier, body);
             return HttpResponse.ok();
         } catch (Exception e) {
             return HttpResponse.serverError(
@@ -50,8 +48,8 @@ public class User {
         }
     }
 
-    @Post(consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
-    public HttpResponse<Map<String, Object>> editUser(@PathVariable String identifier, @Body UserInfo body) {
+    @Post(consumes = MediaType.TEXT_PLAIN, produces = MediaType.APPLICATION_JSON)
+    public HttpResponse<Map<String, Object>> editUser(@PathVariable String identifier, @Body DataProvider.UserResponseType body) {
 
         if (!DataProvider.usersMapping.containsKey(identifier)) {
             return HttpResponse.notFound(
@@ -60,7 +58,7 @@ public class User {
                     ));
         }
         try {
-            DataProvider.usersMapping.put(identifier, body.responseType);
+            DataProvider.usersMapping.put(identifier, body);
             return HttpResponse.ok();
         } catch (Exception e) {
             return HttpResponse.serverError(

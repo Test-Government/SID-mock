@@ -10,10 +10,13 @@ import java.time.Duration;
 @ConfigurationProperties("sid-mock")
 public record SidMockProperties(
         @NotBlank
-        Duration delay, // = Duration.ofSeconds(1);
+        Duration delay,
 
         @NotBlank
-        Duration expiration // = Duration.ofMinutes(5);
+        Duration expiration,
+
+        @NotBlank
+        Boolean storeAuthRequests
 //
 //    @NotBlank(message = "truststore location must be provided")
 //    String trustStorePath
