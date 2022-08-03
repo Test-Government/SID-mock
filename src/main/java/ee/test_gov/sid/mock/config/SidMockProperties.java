@@ -16,7 +16,10 @@ public record SidMockProperties(
         Duration expiration,
 
         @NotBlank
-        Boolean storeAuthRequests
+        Boolean storeAuthRequests,
+
+        @NotBlank
+        Boolean overrideDocumentNumber
 //
 //    @NotBlank(message = "truststore location must be provided")
 //    String trustStorePath

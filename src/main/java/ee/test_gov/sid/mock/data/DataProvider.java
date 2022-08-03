@@ -26,7 +26,7 @@ import static io.lettuce.core.SetArgs.Builder.ex;
 public class DataProvider {
     private final StatefulRedisConnection<String, String> redisConnection;
 
-    private final SidMockProperties sidMockProperties;
+    public final SidMockProperties sidMockProperties;
 
     public static PrivateKey privateKey;
 
@@ -55,6 +55,18 @@ public class DataProvider {
             usersMapping = getUsersMapping();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public enum SessionType {
+        CERTIFICATE_CHOICE("certificate choice session"),
+        AUTHENTICATION("authentication session"),
+        SIGNING("signing session");
+
+        public final String name;
+
+        SessionType(String name) {
+            this.name = name;
         }
     }
 
@@ -122,7 +134,7 @@ public class DataProvider {
         usersMapping = getUsersMapping();
     }
 
-    public void putResponseData(UUID sessionId, String identifier, AuthenticationInitData inputData) throws Exception {
+    public void putResponseData(UUID sessionId, String identifier, SessionInitData inputData) throws Exception {
         long returnTime = System.currentTimeMillis() + sidMockProperties.delay().toMillis();
         ResponseData responseData = ResponseData.generateResponseData(identifier, inputData, returnTime);
         JsonMapper jsonMapper = new JsonMapper();
@@ -153,7 +165,7 @@ public class DataProvider {
         }
     }
 
-    public void putRequestData(String Identifier, AuthenticationInitData inputData) throws JsonProcessingException {
+    public void putRequestData(String Identifier, SessionInitData inputData) throws JsonProcessingException {
         if (sidMockProperties.storeAuthRequests()) {
             JsonMapper jsonMapper = new JsonMapper();
             String response = jsonMapper.writeValueAsString(inputData);

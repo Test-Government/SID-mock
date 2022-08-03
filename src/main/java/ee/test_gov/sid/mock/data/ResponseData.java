@@ -2,14 +2,16 @@ package ee.test_gov.sid.mock.data;
 
 import ee.sk.smartid.HashType;
 import javassist.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.security.GeneralSecurityException;
 import java.security.Signature;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-
+@Slf4j
 public class ResponseData {
     public Map<String, Object> jsonBody;
     public long returnTime;
@@ -38,7 +40,7 @@ public class ResponseData {
         return sign.sign();
     }
 
-    public static ResponseData generateResponseData(String identifier, AuthenticationInitData inputData, long returnTime) throws Exception {
+    public static ResponseData generateResponseData(String identifier, SessionInitData inputData, long returnTime) throws Exception {
         Map<String, Object> jsonBody = new HashMap<>();
         Map<String, Object> result = new HashMap<>();
 
@@ -49,15 +51,16 @@ public class ResponseData {
 
         if (expectedResult == DataProvider.UserResponseType.OK) {
 
-            String certificate = DataProvider.certificates.get(
-                    String.format("%s-mock-q.auth", identifier.toLowerCase()));
+            String certificate = switch (inputData.sessionType) {
+                case AUTHENTICATION -> DataProvider.certificates.get(
+                        String.format("%s-mock-q.auth", identifier.toLowerCase()));
+                case CERTIFICATE_CHOICE, SIGNING -> DataProvider.certificates.get(
+                        String.format("%s-mock-q.sign", identifier.toLowerCase()));
+            };
 
             result.put("endResult", "OK");
-            result.put("documentNumber", identifier);
-
-            Map<String, Object> signature = new HashMap<>();
-            signature.put("value", Base64.getEncoder().encodeToString(ResponseData.generateSignature(inputData.hash)));
-            signature.put("algorithm", "sha512WithRSAEncryption");
+            result.put("documentNumber", Optional.ofNullable(inputData.documentNumber)
+                    .orElse(identifier + "-MOCK-Q"));
 
             Map<String, Object> cert = new HashMap<>();
             cert.put("value", certificate);
@@ -65,9 +68,17 @@ public class ResponseData {
 
             jsonBody.put("state", "COMPLETE");
             jsonBody.put("result", result);
-            jsonBody.put("signature", signature);
             jsonBody.put("cert", cert);
-            jsonBody.put("interactionFlowUsed", "verificationCodeChoice");
+
+            if (inputData.sessionType == DataProvider.SessionType.AUTHENTICATION
+                    || inputData.sessionType == DataProvider.SessionType.SIGNING) {
+                Map<String, Object> signature = new HashMap<>();
+                signature.put("value", Base64.getEncoder().encodeToString(ResponseData.generateSignature(inputData.hash)));
+                signature.put("algorithm", "sha512WithRSAEncryption");
+
+                jsonBody.put("signature", signature);
+                jsonBody.put("interactionFlowUsed", inputData.allowedInteractionsOrder.get(0).type);
+            }
 
         } else {
             result.put("endResult", expectedResult.toString());

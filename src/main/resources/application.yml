@@ -16,4 +16,5 @@ sid-mock:
   expiration: 5m
   trust-store-path: classpath:sid-mock-ts.jks
   store-auth-requests: false
+  override-document-number: false
 
