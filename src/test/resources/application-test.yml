@@ -1,0 +1,9 @@
+micronaut:
+  server:
+    port: -1
+
+sid-mock:
+  delay: 0s
+  expiration: 1m
+  store-auth-requests: false
+  override-document-number: false
