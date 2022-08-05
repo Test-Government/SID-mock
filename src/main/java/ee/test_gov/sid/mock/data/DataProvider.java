@@ -59,14 +59,16 @@ public class DataProvider {
     }
 
     public enum SessionType {
-        CERTIFICATE_CHOICE("certificate choice session"),
-        AUTHENTICATION("authentication session"),
-        SIGNING("signing session");
+        CERTIFICATE_CHOICE("Choice", "certificate choice session"),
+        AUTHENTICATION("Auth", "authentication session"),
+        SIGNING("Sign", "signing session");
 
         public final String name;
+        public final String label;
 
-        SessionType(String name) {
+        SessionType(String label, String name) {
             this.name = name;
+            this.label = label;
         }
     }
 
@@ -166,31 +168,28 @@ public class DataProvider {
     }
 
     public void putRequestData(String Identifier, SessionInitData inputData) throws JsonProcessingException {
-        if (sidMockProperties.storeAuthRequests()) {
+        if (sidMockProperties.storeSessionInitRequests()) {
             JsonMapper jsonMapper = new JsonMapper();
             String response = jsonMapper.writeValueAsString(inputData);
             this.redisConnection.sync().set(
-                    Identifier + "_Auth",
+                    Identifier + "_Latest" + inputData.sessionType.label + "Request",
                     response,
                     ex(sidMockProperties.expiration())
             );
             this.redisConnection.sync().set(
-                    "LatestAuthRequest",
+                    Identifier + "_LatestRequest",
+                    response,
+                    ex(sidMockProperties.expiration())
+            );
+            this.redisConnection.sync().set(
+                    "LatestRequest",
                     response,
                     ex(sidMockProperties.expiration())
             );
         }
     }
 
-    public Map<String, Object> getRequestData() throws Exception {
-        return fetchRequestData("LatestAuthRequest");
-    }
-
-    public Map<String, Object> getRequestData(String identifier) throws Exception {
-        return fetchRequestData(identifier + "_Auth");
-    }
-
-    private Map<String, Object> fetchRequestData(String key) throws Exception {
+    public Map<String, Object> fetchRequestData(String key) throws Exception {
         String redisResponseData = this.redisConnection.sync().get(key);
         if (redisResponseData == null) {
             throw new NotFoundException("Latest request not found");

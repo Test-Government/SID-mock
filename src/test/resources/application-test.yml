@@ -5,5 +5,5 @@ micronaut:
 sid-mock:
   delay: 0s
   expiration: 1m
-  store-auth-requests: false
+  store-session-init-requests: false
   override-document-number: false

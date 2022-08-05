@@ -16,7 +16,7 @@ public record SidMockProperties(
         Duration expiration,
 
         @NotBlank
-        Boolean storeAuthRequests,
+        Boolean storeSessionInitRequests,
 
         @NotBlank
         Boolean overrideDocumentNumber

@@ -1,5 +1,6 @@
 package ee.test_gov.sid.mock.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.micronaut.core.annotation.Introspected;
 import lombok.ToString;
 
@@ -7,6 +8,7 @@ import java.util.List;
 
 @ToString
 @Introspected
+@JsonIgnoreProperties(value = {"sessionType", "documentNumber"})
 public class SessionInitData {
     public String relyingPartyUUID;
     public String relyingPartyName;
