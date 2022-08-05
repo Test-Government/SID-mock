@@ -60,7 +60,7 @@ public class Session {
 
     HttpResponse<Map<String, Object>> processSessionByDocumentNumber(String documentNumber, SessionInitData inputData) {
 
-        Pattern pattern = Pattern.compile("^(?<identifier>PNO[a-zA-Z]{2}-.*)-(?<documentNrSuffix>[a-zA-Z]{4}-[a-zA-Z]{1,2})$");
+        Pattern pattern = Pattern.compile("^(?<identifier>PNO[a-zA-Z]{2}-.*)-(?<documentNrSuffix>[a-zA-Z\\d]{4}-[a-zA-Z]{1,2})$");
         Matcher matcher = pattern.matcher(documentNumber);
 
         if (!matcher.find()) {
