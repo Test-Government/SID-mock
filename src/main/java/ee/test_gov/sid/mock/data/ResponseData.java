@@ -31,11 +31,11 @@ public class ResponseData {
         return digestWithPrefix;
     }
 
-    private static byte[] generateSignature(String hash) throws GeneralSecurityException {
+    private static byte[] generateSignature(String hash, String hashType) throws GeneralSecurityException {
         Signature sign = Signature.getInstance("NONEwithRSA");
         sign.initSign(DataProvider.privateKey);
         byte[] bytes = Base64.getDecoder().decode(hash);
-        byte[] paddedHash = addPadding(HashType.valueOf("SHA512").getDigestInfoPrefix(), bytes);
+        byte[] paddedHash = addPadding(HashType.valueOf(hashType).getDigestInfoPrefix(), bytes);
         sign.update(paddedHash);
         return sign.sign();
     }
@@ -73,8 +73,9 @@ public class ResponseData {
             if (inputData.sessionType == DataProvider.SessionType.AUTHENTICATION
                     || inputData.sessionType == DataProvider.SessionType.SIGNING) {
                 Map<String, Object> signature = new HashMap<>();
-                signature.put("value", Base64.getEncoder().encodeToString(ResponseData.generateSignature(inputData.hash)));
-                signature.put("algorithm", "sha512WithRSAEncryption");
+                signature.put("value", Base64.getEncoder()
+                        .encodeToString(ResponseData.generateSignature(inputData.hash, inputData.hashType)));
+                signature.put("algorithm", inputData.hashType.toLowerCase()+"WithRSAEncryption");
 
                 jsonBody.put("signature", signature);
                 jsonBody.put("interactionFlowUsed", inputData.allowedInteractionsOrder.get(0).type);
