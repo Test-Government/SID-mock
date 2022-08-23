@@ -26,7 +26,7 @@ import static io.lettuce.core.SetArgs.Builder.ex;
 public class DataProvider {
     private final StatefulRedisConnection<String, String> redisConnection;
 
-    private final SidMockProperties sidMockProperties;
+    public final SidMockProperties sidMockProperties;
 
     public static PrivateKey privateKey;
 
@@ -55,6 +55,20 @@ public class DataProvider {
             usersMapping = getUsersMapping();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public enum SessionType {
+        CERTIFICATE_CHOICE("Choice", "certificate choice session"),
+        AUTHENTICATION("Auth", "authentication session"),
+        SIGNING("Sign", "signing session");
+
+        public final String name;
+        public final String label;
+
+        SessionType(String label, String name) {
+            this.name = name;
+            this.label = label;
         }
     }
 
@@ -122,7 +136,7 @@ public class DataProvider {
         usersMapping = getUsersMapping();
     }
 
-    public void putResponseData(UUID sessionId, String identifier, AuthenticationInitData inputData) throws Exception {
+    public void putResponseData(UUID sessionId, String identifier, SessionInitData inputData) throws Exception {
         long returnTime = System.currentTimeMillis() + sidMockProperties.delay().toMillis();
         ResponseData responseData = ResponseData.generateResponseData(identifier, inputData, returnTime);
         JsonMapper jsonMapper = new JsonMapper();
@@ -153,32 +167,29 @@ public class DataProvider {
         }
     }
 
-    public void putRequestData(String Identifier, AuthenticationInitData inputData) throws JsonProcessingException {
-        if (sidMockProperties.storeAuthRequests()) {
+    public void putRequestData(String Identifier, SessionInitData inputData) throws JsonProcessingException {
+        if (sidMockProperties.storeSessionInitRequests()) {
             JsonMapper jsonMapper = new JsonMapper();
             String response = jsonMapper.writeValueAsString(inputData);
             this.redisConnection.sync().set(
-                    Identifier + "_Auth",
+                    Identifier + "_Latest" + inputData.sessionType.label + "Request",
                     response,
                     ex(sidMockProperties.expiration())
             );
             this.redisConnection.sync().set(
-                    "LatestAuthRequest",
+                    Identifier + "_LatestRequest",
+                    response,
+                    ex(sidMockProperties.expiration())
+            );
+            this.redisConnection.sync().set(
+                    "LatestRequest",
                     response,
                     ex(sidMockProperties.expiration())
             );
         }
     }
 
-    public Map<String, Object> getRequestData() throws Exception {
-        return fetchRequestData("LatestAuthRequest");
-    }
-
-    public Map<String, Object> getRequestData(String identifier) throws Exception {
-        return fetchRequestData(identifier + "_Auth");
-    }
-
-    private Map<String, Object> fetchRequestData(String key) throws Exception {
+    public Map<String, Object> fetchRequestData(String key) throws Exception {
         String redisResponseData = this.redisConnection.sync().get(key);
         if (redisResponseData == null) {
             throw new NotFoundException("Latest request not found");

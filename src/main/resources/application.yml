@@ -15,5 +15,6 @@ sid-mock:
   delay: 1s
   expiration: 5m
   trust-store-path: classpath:sid-mock-ts.jks
-  store-auth-requests: false
+  store-session-init-requests: false
+  override-document-number: false
 
