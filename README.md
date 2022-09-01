@@ -39,8 +39,8 @@ Missing users:
 * PNOLV-311299-18886
 
 Additional users:
-* PNOBB-30303039903
-* PNOIS-30303039903
+* PNOBB-0303039903 (follows Barbados NRN format YYMMDDRRRR)
+* PNOIS-30303039903 (does not follow Icelandic identification number format)
 
 **! Document numbers do not match SID DEMO**
 
