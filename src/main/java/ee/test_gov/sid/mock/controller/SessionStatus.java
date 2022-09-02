@@ -21,7 +21,7 @@ public class SessionStatus {
     private final DataProvider dataProvider;
 
     @Get(produces = MediaType.APPLICATION_JSON)
-    public HttpResponse<Map<String, Object>> sessionStatus(@PathVariable String sessionId, @QueryValue long timeoutMs) {
+    public HttpResponse<Map<String, Object>> sessionStatus(@PathVariable String sessionId, @QueryValue(defaultValue = "60500") long timeoutMs) {
         log.info("Received status check request for session id '{}'", sessionId);
         try {
             Map<String, Object> responseData = dataProvider.getResponseData(sessionId, timeoutMs);
