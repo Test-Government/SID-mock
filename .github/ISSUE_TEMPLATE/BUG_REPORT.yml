@@ -1,0 +1,67 @@
+name: Bug Report
+description: File a bug report.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "A bug happened!"
+    validations:
+      required: true
+  - type: textarea
+    id: reprod
+    attributes:
+      label: "Reproduction steps"
+      description: Please enter an explicit description of your issue
+      value: |
+        1. Go to '...'
+        2. Click on '....'
+        3. Scroll down to '....'
+        4. See error
+    validations:
+      required: true
+  - type: textarea
+    id: screenshot
+    attributes:
+      label: "Screenshot"
+      description: If applicable, add a screenshot(s) to help explain your problem.
+      placeholder: "Click inside and drag and drop an image here..."
+    validations:
+      required: false
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of SID-mock are you running?
+      placeholder: "eg. 1.1.0"
+    validations:
+      required: true
+  - type: input
+    id: repro-url
+    attributes:
+      label: "Reproduction project URL"
+      description: Please enter a public link to a minimal reproduction of your own
+      placeholder: "eg. https://github.com/Test-Government/SID-mock/"
+    validations:
+      required: false
+  - type: textarea
+    id: extra-environment-info
+    attributes:
+      label: Extra details about your environment
+      description: If applicable, provide extra details on your environment.
+      placeholder: |
+        Docker Engine: 23.0.5
+        OS: linux x64
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: If applicable, please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks
+      render: shell
