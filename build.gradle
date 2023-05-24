@@ -22,7 +22,7 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut.redis:micronaut-redis-lettuce")
-    implementation("ee.sk.smartid:smart-id-java-client:2.2.2")
+    implementation("ee.sk.smartid:smart-id-java-client:2.3")
 
     testImplementation("org.testcontainers:spock")
     testImplementation("org.testcontainers:testcontainers")
