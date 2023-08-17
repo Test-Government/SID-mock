@@ -1,0 +1,20 @@
+name: Feature Request
+description: Create a new ticket for a new feature request.
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: "Summary"
+      description: Provide a brief explanation of the feature
+      placeholder: Describe in a few lines your feature request
+    validations:
+      required: true
+  - type: textarea
+    id: implementation
+    attributes:
+      label: "Implementation details"
+      description: Describe how do you see this feature request should be resolved
+      placeholder: "Eg. adding a new endpoint GET ..."
+    validations:
+      required: false

@@ -5,7 +5,7 @@ WORKDIR /home/gradle/src
 
 RUN gradle --no-daemon test
 
-FROM gradle:jdk17-alpine AS build
+FROM gradle:8.0.2-jdk17-alpine AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 

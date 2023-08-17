@@ -1,4 +1,5 @@
 # SID MOCK
+[![Docker Image CI](https://github.com/Test-Government/SID-mock/actions/workflows/docker-image.yml/badge.svg)](https://github.com/Test-Government/SID-mock/actions/workflows/docker-image.yml) [![Run tests](https://github.com/Test-Government/SID-mock/actions/workflows/run-tests.yml/badge.svg)](https://github.com/Test-Government/SID-mock/actions/workflows/run-tests.yml)
 
 Java application to act as local replacement for [SID DEMO](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters#demo-parameters).
 Built Docker images are pushed to [Docker Hub](https://hub.docker.com/repository/docker/nortal/sid-mock)
