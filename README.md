@@ -48,9 +48,9 @@ All certificates have been created with document number suffix "MOCK-Q".
 
 ### OCSP
 In order to support [OCSP](https://en.wikipedia.org/wiki/Online_Certificate_Status_Protocol) validation
-every new/updated certificate needs to be uploaded to: https://demo.sk.ee/upload_cert/index.php
+every new/updated user certificate needs to be uploaded to: https://demo.sk.ee/upload_cert/index.php
 
-**Note:** only applies for certificates with OCSP URL pointing at SK demo.
+**Note:** only applies for user certificates with OCSP URL pointing at SK demo.
 
 ### Configuration
 
