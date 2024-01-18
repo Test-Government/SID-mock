@@ -1,7 +1,7 @@
 plugins {
-    id("groovy") 
+    id("groovy")
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("io.micronaut.application") version "3.7.10"
+    id("io.micronaut.application") version "4.2.1"
 }
 
 version = "0.1"
@@ -20,12 +20,15 @@ dependencies {
     implementation("jakarta.annotation:jakarta.annotation-api")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("ch.qos.logback:logback-classic")
-    implementation("io.micronaut:micronaut-validation")
+    annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut.redis:micronaut-redis-lettuce")
     implementation("ee.sk.smartid:smart-id-java-client:2.3")
+    runtimeOnly("org.yaml:snakeyaml")
 
     testImplementation("org.testcontainers:spock")
     testImplementation("org.testcontainers:testcontainers")
+    testImplementation("org.bouncycastle:bcpkix-jdk18on:1.77")
 }
 
 
