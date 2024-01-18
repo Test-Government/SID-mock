@@ -32,20 +32,26 @@ docker compose up sid-mock-service
 ```
 
 ## MockData (Users)
-Predefined users list should mostly match [SID DEMO test accounts list](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters#accounts) 
+Predefined accounts list should mostly match [SID DEMO test accounts list](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters#accounts).
+
+As of 2024.01.18 the accounts list matches [SID DEMO test accounts @2024.01.18](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters/55263761c9db0845e499fb776a7de1c9181b75ae)
 with the following exceptions:
 
-Missing users:
-* PNOLT-49912318881
-* PNOLV-311299-18886
+* Missing accounts:
+  * PNOLV-329999-88807
+* Additional accounts:
+  * Custom (have never existed in SID DEMO):
+    * PNOBB-0303039903 (follows Barbados NRN format YYMMDDRRRR)
+    * PNOIS-30303039903 (does not follow Icelandic identification number format)
+  * Legacy (no longer exist in SID DEMO) 
+    * PNOEE-39912319997 
+    * PNOLT-39912319997 
+    * PNOLV-010404-29990 
+    * PNOLV-329999-99805
+* Data mismatch:
+  * Unlike DEMO, mocks signing certificates don't include users birthdate
 
-Additional users:
-* PNOBB-0303039903 (follows Barbados NRN format YYMMDDRRRR)
-* PNOIS-30303039903 (does not follow Icelandic identification number format)
-
-**! Document numbers do not match SID DEMO**
-
-All certificates have been created with document number suffix "MOCK-Q".
+All certificates for 'OK' response have been created with document number suffix "MOCK-Q".
 
 ### OCSP
 In order to support [OCSP](https://en.wikipedia.org/wiki/Online_Certificate_Status_Protocol) validation
