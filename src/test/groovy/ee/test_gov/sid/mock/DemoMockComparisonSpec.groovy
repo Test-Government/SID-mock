@@ -32,7 +32,7 @@ class DemoMockComparisonSpec extends RedisDependantSpecification {
 
     def "Dummy test"() {
         given:
-        ArrayList mockFields = getCertificateFields("30303039914")
+        ArrayList mockFields = getCertificateFields("PNOEE-30303039914")
     }
 
     def "When mock returns a certificate, then it matches with the certificate from SK demo"() {
@@ -64,8 +64,7 @@ class DemoMockComparisonSpec extends RedisDependantSpecification {
         "PNOEE-50701019992"  | _
         "PNOLT-50701019992"  | _
         "PNOLV-010107-20007" | _
-//        Exists in demo (as of 18.01.2024) but missing from mock
-//        "PNOLV-329999-88807" | _
+        "PNOLV-329999-88807" | _
         "PNOEE-30303039903"  | _
         "PNOLT-30303039903"  | _
         "PNOLV-030303-10004" | _
@@ -150,7 +149,7 @@ ${cert.get("value")}
 
         // Get birthdate field
         byte[] extVal = certificate.getExtensionValue("2.5.29.9")
-        if (extVal != null) {
+        if (extVal != null && sessionType==DataProvider.SessionType.AUTHENTICATION) {
             ASN1InputStream ais1 = new ASN1InputStream(new ByteArrayInputStream(extVal))
             ASN1OctetString octs = (ASN1OctetString) ais1.readObject()
             ASN1InputStream ais2 = new ASN1InputStream(new ByteArrayInputStream(octs.getOctets()))

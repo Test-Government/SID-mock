@@ -37,8 +37,6 @@ Predefined accounts list should mostly match [SID DEMO test accounts list](https
 As of 2024.01.18 the accounts list matches [SID DEMO test accounts @2024.01.18](https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters/55263761c9db0845e499fb776a7de1c9181b75ae)
 with the following exceptions:
 
-* Missing accounts:
-  * PNOLV-329999-88807
 * Additional accounts:
   * Custom (have never existed in SID DEMO):
     * PNOBB-0303039903 (follows Barbados NRN format YYMMDDRRRR)
