@@ -1,7 +1,6 @@
 package ee.test_gov.sid.mock.config.controller;
 
 import ee.test_gov.sid.mock.data.DataProvider;
-import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
@@ -27,9 +26,9 @@ public class Users {
     public HttpResponse<Map<String, Object>> addUsers(@Body Map<String, DataProvider.UserResponseType> body) {
         Set<String> duplicates = new HashSet<>(body.keySet());
         duplicates.retainAll(DataProvider.usersMapping.keySet());
-        if(!duplicates.isEmpty()) {
+        if (!duplicates.isEmpty()) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", "An account already exists for identifiers: " + duplicates
                     ));
         }
@@ -38,7 +37,7 @@ public class Users {
             return HttpResponse.ok();
         } catch (Exception e) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }
@@ -51,7 +50,7 @@ public class Users {
             return HttpResponse.ok();
         } catch (Exception e) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }
@@ -64,7 +63,7 @@ public class Users {
             return HttpResponse.ok();
         } catch (Exception e) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }

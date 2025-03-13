@@ -22,7 +22,7 @@ public class SigningSession extends Session {
     @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse<Map<String, Object>> signingByEtsi(
             @PathVariable String identifier, @Body SessionInitData body) {
-        body.sessionType = DataProvider.SessionType.SIGNING;
+        body.setSessionType(DataProvider.SessionType.SIGNING);
         return processSession(identifier, body);
     }
 
@@ -31,7 +31,7 @@ public class SigningSession extends Session {
     @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse<Map<String, Object>> signingByDocumentNumber(
             @PathVariable String documentNumber, @Body SessionInitData body) {
-        body.sessionType = DataProvider.SessionType.SIGNING;
+        body.setSessionType(DataProvider.SessionType.SIGNING);
         return processSessionByDocumentNumber(documentNumber, body);
     }
 }

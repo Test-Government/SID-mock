@@ -1,7 +1,6 @@
 package ee.test_gov.sid.mock.config.controller;
 
 import ee.test_gov.sid.mock.data.DataProvider;
-import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
@@ -18,13 +17,13 @@ public class User {
 
         if (DataProvider.usersMapping.containsKey(identifier)) {
             return HttpResponse.ok(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "Identifier", identifier,
                             "ResponseType", DataProvider.usersMapping.get(identifier)
                     ));
         }
         return HttpResponse.notFound(
-                CollectionUtils.mapOf(
+                Map.of(
                         "error", "Account not found for identifier: " + identifier
                 ));
     }
@@ -33,7 +32,7 @@ public class User {
     public HttpResponse<Map<String, Object>> addUser(@PathVariable String identifier, @Body DataProvider.UserResponseType body) {
         if (DataProvider.usersMapping.containsKey(identifier)) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", "An account already exists for identifier: " + identifier
                     ));
         }
@@ -42,7 +41,7 @@ public class User {
             return HttpResponse.ok();
         } catch (Exception e) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }
@@ -53,7 +52,7 @@ public class User {
 
         if (!DataProvider.usersMapping.containsKey(identifier)) {
             return HttpResponse.notFound(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", "No existing account to edit for identifier: " + identifier
                     ));
         }
@@ -62,7 +61,7 @@ public class User {
             return HttpResponse.ok();
         } catch (Exception e) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }
@@ -72,7 +71,7 @@ public class User {
     public HttpResponse<Map<String, Object>> deleteUser(@PathVariable String identifier) {
         if (!DataProvider.usersMapping.containsKey(identifier)) {
             return HttpResponse.notFound(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", "No existing account to delete for identifier: " + identifier
                     ));
         }
@@ -81,7 +80,7 @@ public class User {
             return HttpResponse.ok();
         } catch (Exception e) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }

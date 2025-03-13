@@ -183,17 +183,17 @@ public class DataProvider {
         }
     }
 
-    public void putRequestData(String Identifier, SessionInitData inputData) throws JsonProcessingException {
-        if (sidMockProperties.storeSessionInitRequests()) {
+    public void putRequestData(String identifier, SessionInitData inputData) throws JsonProcessingException {
+        if (Boolean.TRUE.equals(sidMockProperties.storeSessionInitRequests())) {
             JsonMapper jsonMapper = new JsonMapper();
             String response = jsonMapper.writeValueAsString(inputData);
             this.redisConnection.sync().set(
-                    Identifier + "_Latest" + inputData.sessionType.label + "Request",
+                    identifier + "_Latest" + inputData.getSessionType().label + "Request",
                     response,
                     ex(sidMockProperties.expiration())
             );
             this.redisConnection.sync().set(
-                    Identifier + "_LatestRequest",
+                    identifier + "_LatestRequest",
                     response,
                     ex(sidMockProperties.expiration())
             );

@@ -22,7 +22,7 @@ public class CertificateChoiceSession extends Session {
     @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse<Map<String, Object>> certificateChoiceByEtsi(
             @PathVariable String identifier, @Body SessionInitData body) {
-        body.sessionType = DataProvider.SessionType.CERTIFICATE_CHOICE;
+        body.setSessionType(DataProvider.SessionType.CERTIFICATE_CHOICE);
         return processSession(identifier, body);
     }
 
@@ -31,7 +31,7 @@ public class CertificateChoiceSession extends Session {
     @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse<Map<String, Object>> certificateChoiceByDocumentNumber(
             @PathVariable String documentNumber, @Body SessionInitData body) {
-        body.sessionType = DataProvider.SessionType.CERTIFICATE_CHOICE;
+        body.setSessionType(DataProvider.SessionType.CERTIFICATE_CHOICE);
         return processSessionByDocumentNumber(documentNumber, body);
     }
 }
