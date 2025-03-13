@@ -20,7 +20,7 @@ abstract class RedisDependantSpecification extends Specification implements Test
     Map<String, String> getProperties() {
         return [
                 'redis.port': redis.getMappedPort(6379) as String,
-                'redis.uri' : 'redis://' + redis.getContainerIpAddress() + ":" + redis.getMappedPort(6379)
+                'redis.uri' : 'redis://' + redis.getHost() + ":" + redis.getMappedPort(6379)
         ]
     }
 }
