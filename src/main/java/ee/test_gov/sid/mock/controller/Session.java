@@ -39,6 +39,13 @@ public class Session {
         } catch (Exception e) {
             log.error("Failed to store request", e);
         }
+
+        if (inputData.getSessionType() != DataProvider.SessionType.CERTIFICATE_CHOICE
+                && inputData.getAllowedInteractionsOrder().stream().anyMatch(AllowedInteractionsOrder::containsNullByte)) {
+            log.error("Null byte in allowedInteractionsOrder display text.");
+            return nullByteBadRequest();
+        }
+
         try {
             dataProvider.putResponseData(sessionId, identifier, inputData);
             log.info("Response stored for '{}' authentication with session id '{}'", identifier, sessionId);
@@ -86,5 +93,19 @@ public class Session {
 
         String identifier = matcher.group("identifier");
         return processSession(identifier, inputData);
+    }
+
+    HttpResponse<Map<String, Object>> nullByteBadRequest() {
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("type", "about:blank");
+        responseMap.put("title", "Bad Request");
+        responseMap.put("status", 400);
+        responseMap.put("detail", "Bad Request");
+        responseMap.put("instance", null);
+        responseMap.put("properties", null);
+        responseMap.put("code", 400);
+        responseMap.put("message", "Bad Request");
+
+        return HttpResponse.badRequest(responseMap);
     }
 }

@@ -7,6 +7,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import setup.RedisDependantSpecification
@@ -67,6 +68,35 @@ class SigningSessionSpec extends RedisDependantSpecification {
 
         def signature = body.get("signature") as Map
         assert signature.get("algorithm") == "sha512WithRSAEncryption"
+
+        where:
+        endpoint    | identifier
+        "/etsi"     | "PNOEE-30303039914"
+        "/document" | "PNOEE-30303039914-MOCK-Q"
+    }
+
+    def "given null-byte in allowed interactions display text, then 400 bad request"() {
+        given:
+        def requestParameters = """
+{
+  "relyingPartyUUID" : "00000000-0000-0000-0000-000000000000",
+  "relyingPartyName" : "DEMO",
+  "hash" : "7rzjHadXTwqsjKrlSqkT5JQ4vejD7VHhsd/zA9173tNFZjChDuh0L8lCHDAVR/ogVe3mRTxEeskmkYQ7cfding==",
+  "hashType" : "SHA512",
+  "allowedInteractionsOrder" : [ {
+    "type" : "verificationCodeChoice",
+    "displayText60" : "Special char = \\u0000"
+  } ]
+}"""
+
+        when:
+        HttpRequest initSessionRequest = HttpRequest.POST(
+                "/smart-id-rp/v2/signature${endpoint}/${identifier}", requestParameters)
+        client.toBlocking().exchange(initSessionRequest, Map<String, Object>)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.status == HttpStatus.BAD_REQUEST
 
         where:
         endpoint    | identifier
