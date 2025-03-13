@@ -81,6 +81,19 @@ public class ResponseData {
                 jsonBody.put("interactionFlowUsed", inputData.allowedInteractionsOrder.get(0).type);
             }
 
+        } else if (inputData.sessionType == DataProvider.SessionType.CERTIFICATE_CHOICE) {
+            result.put("endResult", "OK");
+            result.put("documentNumber", Optional.ofNullable(inputData.documentNumber)
+                    .orElse(identifier + "-MOCK-Q"));
+
+            Map<String, Object> cert = new HashMap<>();
+            cert.put("value", DataProvider.certificates.get(String.format("%s-mock-q.sign", identifier.toLowerCase())));
+            cert.put("certificateLevel", "QUALIFIED");
+
+            jsonBody.put("state", "COMPLETE");
+            jsonBody.put("result", result);
+            jsonBody.put("cert", cert);
+
         } else {
             result.put("endResult", expectedResult.toString());
 

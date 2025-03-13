@@ -99,6 +99,7 @@ public class DataProvider {
     private static Map<String, String> getCertificates() throws Exception {
         Map<String, String> certificates = new HashMap<>();
 
+        // Get OK users certificates
         try (InputStream is = AuthenticationResponseValidator.class.getResourceAsStream("/sid-mock-ts.jks")) {
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
             keystore.load(is, "changeit".toCharArray());
@@ -111,8 +112,23 @@ public class DataProvider {
                 }
             }
         } catch (IOException | KeyStoreException | CertificateException | NoSuchAlgorithmException e) {
-            throw new Exception("Error retrieving certificates", e);
+            throw new Exception("Error retrieving ok certificates", e);
         }
+
+        // Get NOK users signing certificates
+        try (InputStream is = AuthenticationResponseValidator.class.getResourceAsStream("/sid-mock-nok-ts.jks")) {
+            KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keystore.load(is, "changeit".toCharArray());
+            Enumeration<String> enumeration = keystore.aliases();
+            while (enumeration.hasMoreElements()) {
+                String alias = enumeration.nextElement();
+                X509Certificate certificate = (X509Certificate) keystore.getCertificate(alias);
+                certificates.put(alias, Base64.getEncoder().encodeToString(certificate.getEncoded()));
+            }
+        } catch (IOException | KeyStoreException | CertificateException | NoSuchAlgorithmException e) {
+            throw new Exception("Error retrieving nok certificates", e);
+        }
+
         return certificates;
     }
 
