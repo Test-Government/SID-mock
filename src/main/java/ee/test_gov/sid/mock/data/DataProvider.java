@@ -99,6 +99,7 @@ public class DataProvider {
     private static Map<String, String> getCertificates() throws Exception {
         Map<String, String> certificates = new HashMap<>();
 
+        // Get OK users certificates
         try (InputStream is = AuthenticationResponseValidator.class.getResourceAsStream("/sid-mock-ts.jks")) {
             KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
             keystore.load(is, "changeit".toCharArray());
@@ -111,8 +112,23 @@ public class DataProvider {
                 }
             }
         } catch (IOException | KeyStoreException | CertificateException | NoSuchAlgorithmException e) {
-            throw new Exception("Error retrieving certificates", e);
+            throw new Exception("Error retrieving ok certificates", e);
         }
+
+        // Get NOK users signing certificates
+        try (InputStream is = AuthenticationResponseValidator.class.getResourceAsStream("/sid-mock-nok-ts.jks")) {
+            KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keystore.load(is, "changeit".toCharArray());
+            Enumeration<String> enumeration = keystore.aliases();
+            while (enumeration.hasMoreElements()) {
+                String alias = enumeration.nextElement();
+                X509Certificate certificate = (X509Certificate) keystore.getCertificate(alias);
+                certificates.put(alias, Base64.getEncoder().encodeToString(certificate.getEncoded()));
+            }
+        } catch (IOException | KeyStoreException | CertificateException | NoSuchAlgorithmException e) {
+            throw new Exception("Error retrieving nok certificates", e);
+        }
+
         return certificates;
     }
 
@@ -167,17 +183,17 @@ public class DataProvider {
         }
     }
 
-    public void putRequestData(String Identifier, SessionInitData inputData) throws JsonProcessingException {
-        if (sidMockProperties.storeSessionInitRequests()) {
+    public void putRequestData(String identifier, SessionInitData inputData) throws JsonProcessingException {
+        if (Boolean.TRUE.equals(sidMockProperties.storeSessionInitRequests())) {
             JsonMapper jsonMapper = new JsonMapper();
             String response = jsonMapper.writeValueAsString(inputData);
             this.redisConnection.sync().set(
-                    Identifier + "_Latest" + inputData.sessionType.label + "Request",
+                    identifier + "_Latest" + inputData.getSessionType().label + "Request",
                     response,
                     ex(sidMockProperties.expiration())
             );
             this.redisConnection.sync().set(
-                    Identifier + "_LatestRequest",
+                    identifier + "_LatestRequest",
                     response,
                     ex(sidMockProperties.expiration())
             );

@@ -1,7 +1,6 @@
 package ee.test_gov.sid.mock.controller;
 
 import ee.test_gov.sid.mock.data.DataProvider;
-import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
@@ -26,20 +25,21 @@ public class SessionStatus {
         try {
             Map<String, Object> responseData = dataProvider.getResponseData(sessionId, timeoutMs);
             log.info("Session status found for session id '{}'", sessionId);
+            log.debug(responseData.toString());
             return HttpResponse.ok(
                     responseData
             );
         } catch (NotFoundException e) {
             log.info("Session not found for session id '{}'", sessionId);
             return HttpResponse.notFound(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "code", 404,
                             "message", "Not Found"
                     ));
         } catch (Exception e) {
             log.error("Unable to create authentication response", e);
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }

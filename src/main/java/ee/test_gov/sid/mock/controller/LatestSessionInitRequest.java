@@ -1,7 +1,6 @@
 package ee.test_gov.sid.mock.controller;
 
 import ee.test_gov.sid.mock.data.DataProvider;
-import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
@@ -29,17 +28,10 @@ public class LatestSessionInitRequest {
             );
         } catch (NotFoundException e) {
             log.info("Latest session init request not found", e);
-            return HttpResponse.notFound(
-                    CollectionUtils.mapOf(
-                            "code", 404,
-                            "message", "Not Found"
-                    ));
+            return notFound();
         } catch (Exception e) {
             log.error("Unable to retrieve latest session init request", e);
-            return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
-                            "error", e.getMessage()
-                    ));
+            return serverError(e);
         }
     }
 
@@ -52,17 +44,10 @@ public class LatestSessionInitRequest {
             );
         } catch (NotFoundException e) {
             log.info("Latest session init request for '{}' not found", identifier, e);
-            return HttpResponse.notFound(
-                    CollectionUtils.mapOf(
-                            "code", 404,
-                            "message", "Not Found"
-                    ));
+            return notFound();
         } catch (Exception e) {
             log.error("Unable to retrieve latest session init request", e);
-            return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
-                            "error", e.getMessage()
-                    ));
+            return serverError(e);
         }
     }
 
@@ -92,17 +77,25 @@ public class LatestSessionInitRequest {
             );
         } catch (NotFoundException e) {
             log.info("Latest {} init request for '{}' not found", sessionType.name, identifier, e);
-            return HttpResponse.notFound(
-                    CollectionUtils.mapOf(
-                            "code", 404,
-                            "message", "Not Found"
-                    ));
+            return notFound();
         } catch (Exception e) {
             log.error("Unable to retrieve latest {} init request", sessionType.name, e);
-            return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
-                            "error", e.getMessage()
-                    ));
+            return serverError(e);
         }
+    }
+
+    private HttpResponse<Map<String, Object>> notFound() {
+        return HttpResponse.notFound(
+                Map.of(
+                        "code", 404,
+                        "message", "Not Found"
+                ));
+    }
+
+    private HttpResponse<Map<String, Object>> serverError(Exception e) {
+        return HttpResponse.serverError(
+                Map.of(
+                        "error", e.getMessage()
+                ));
     }
 }

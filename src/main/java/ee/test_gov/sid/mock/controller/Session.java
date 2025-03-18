@@ -1,13 +1,14 @@
 package ee.test_gov.sid.mock.controller;
 
+import ee.test_gov.sid.mock.data.AllowedInteractionsOrder;
 import ee.test_gov.sid.mock.data.DataProvider;
 import ee.test_gov.sid.mock.data.SessionInitData;
-import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpResponse;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -21,7 +22,7 @@ public class Session {
 
     HttpResponse<Map<String, Object>> notFound() {
         return HttpResponse.notFound(
-                CollectionUtils.mapOf(
+                Map.of(
                         "code", 404,
                         "message", "Not Found"
                 ));
@@ -30,18 +31,26 @@ public class Session {
     HttpResponse<Map<String, Object>> processSession(String identifier, SessionInitData inputData) {
 
         UUID sessionId = UUID.randomUUID();
-        log.info("Received {} request for '{}' with session id '{}'", inputData.sessionType.name, identifier, sessionId);
+        log.info("Received {} request for '{}' with session id '{}'", inputData.getSessionType().name, identifier, sessionId);
+        log.debug(inputData.toString());
 
         try {
             dataProvider.putRequestData(identifier, inputData);
         } catch (Exception e) {
             log.error("Failed to store request", e);
         }
+
+        if (inputData.getSessionType() != DataProvider.SessionType.CERTIFICATE_CHOICE
+                && inputData.getAllowedInteractionsOrder().stream().anyMatch(AllowedInteractionsOrder::containsBadChars)) {
+            log.warn("Bad char in allowedInteractionsOrder display text.");
+            return badRequest();
+        }
+
         try {
             dataProvider.putResponseData(sessionId, identifier, inputData);
             log.info("Response stored for '{}' authentication with session id '{}'", identifier, sessionId);
             return HttpResponse.ok(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "sessionID", sessionId
                     )
             );
@@ -52,7 +61,7 @@ public class Session {
         } catch (Exception e) {
             log.error("Unable to create authentication response", e);
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }
@@ -73,7 +82,7 @@ public class Session {
         //  NOTE! This will only change the value in response body, not inside the certificate.
         if (dataProvider.sidMockProperties.overrideDocumentNumber()) {
             log.info("Override document number. Using '{}'", documentNumber);
-            inputData.documentNumber = documentNumber;
+            inputData.setDocumentNumber(documentNumber);
         } else {
             String documentNrSuffix = matcher.group("documentNrSuffix");
             if (!Objects.equals(documentNrSuffix, "MOCK-Q")) {
@@ -84,5 +93,19 @@ public class Session {
 
         String identifier = matcher.group("identifier");
         return processSession(identifier, inputData);
+    }
+
+    HttpResponse<Map<String, Object>> badRequest() {
+        Map<String, Object> responseMap = new HashMap<>();
+        responseMap.put("type", "about:blank");
+        responseMap.put("title", "Bad Request");
+        responseMap.put("status", 400);
+        responseMap.put("detail", "Bad Request");
+        responseMap.put("instance", null);
+        responseMap.put("properties", null);
+        responseMap.put("code", 400);
+        responseMap.put("message", "Bad Request");
+
+        return HttpResponse.badRequest(responseMap);
     }
 }

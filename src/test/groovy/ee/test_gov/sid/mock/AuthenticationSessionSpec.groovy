@@ -7,6 +7,7 @@ import io.micronaut.http.HttpStatus
 import io.micronaut.http.MediaType
 import io.micronaut.http.client.HttpClient
 import io.micronaut.http.client.annotation.Client
+import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
 import setup.RedisDependantSpecification
@@ -73,4 +74,44 @@ class AuthenticationSessionSpec extends RedisDependantSpecification {
         "/etsi"     | "PNOEE-30303039914"
         "/document" | "PNOEE-30303039914-MOCK-Q"
     }
+
+    def "given bad char '#badCharName' in #displayTextType, then 400 bad request"() {
+        given:
+        def requestParameters = """
+{
+  "relyingPartyUUID" : "00000000-0000-0000-0000-000000000000",
+  "relyingPartyName" : "DEMO",
+  "hash" : "7rzjHadXTwqsjKrlSqkT5JQ4vejD7VHhsd/zA9173tNFZjChDuh0L8lCHDAVR/ogVe3mRTxEeskmkYQ7cfding==",
+  "hashType" : "SHA512",
+  "allowedInteractionsOrder" : [ {
+    "type" : "verificationCodeChoice",
+    ${displayTextType} : "Special char = ${badChar}"
+  } ]
+}"""
+
+        when:
+        HttpRequest initSessionRequest = HttpRequest.POST(
+                "/smart-id-rp/v2/authentication${endpoint}/${identifier}", requestParameters)
+        client.toBlocking().exchange(initSessionRequest, Map<String, Object>)
+
+        then:
+        HttpClientResponseException e = thrown()
+        e.status == HttpStatus.BAD_REQUEST
+
+        where:
+        endpoint    | identifier                 | displayTextType  | badChar  | badCharName
+        "/etsi"     | "PNOEE-30303039914"        | "displayText60"  | '\u0000' | "NUL"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText60"  | '\n'     | "LINE_FEED"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText60"  | '\r'     | "CARRIAGE_RETURN"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText200" | '\u0000' | "NUL"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText200" | '\n'     | "LINE_FEED"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText200" | '\r'     | "CARRIAGE_RETURN"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText60"  | '\u0000' | "NUL"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText60"  | '\n'     | "LINE_FEED"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText60"  | '\r'     | "CARRIAGE_RETURN"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText200" | '\u0000' | "NUL"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText200" | '\n'     | "LINE_FEED"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText200" | '\r'     | "CARRIAGE_RETURN"
+    }
+
 }

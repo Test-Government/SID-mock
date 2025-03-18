@@ -1,7 +1,6 @@
 package ee.test_gov.sid.mock.config.controller;
 
 import ee.test_gov.sid.mock.data.DataProvider;
-import io.micronaut.core.util.CollectionUtils;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
@@ -21,7 +20,7 @@ public class UsersReset {
             DataProvider.resetUsersMapping();
         } catch (Exception e) {
             return HttpResponse.serverError(
-                    CollectionUtils.mapOf(
+                    Map.of(
                             "error", e.getMessage()
                     ));
         }

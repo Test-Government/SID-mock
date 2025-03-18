@@ -22,7 +22,7 @@ public class AuthenticationSession extends Session {
     @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse<Map<String, Object>> authenticationByEtsi(
             @PathVariable String identifier, @Body SessionInitData body) {
-        body.sessionType = DataProvider.SessionType.AUTHENTICATION;
+        body.setSessionType(DataProvider.SessionType.AUTHENTICATION);
         return processSession(identifier, body);
     }
 
@@ -31,7 +31,7 @@ public class AuthenticationSession extends Session {
     @Produces(MediaType.APPLICATION_JSON)
     public HttpResponse<Map<String, Object>> authenticationByDocumentNumber(
             @PathVariable String documentNumber, @Body SessionInitData body) {
-        body.sessionType = DataProvider.SessionType.AUTHENTICATION;
+        body.setSessionType(DataProvider.SessionType.AUTHENTICATION);
         return processSessionByDocumentNumber(documentNumber, body);
     }
 }
