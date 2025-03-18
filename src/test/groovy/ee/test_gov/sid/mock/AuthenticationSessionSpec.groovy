@@ -75,7 +75,7 @@ class AuthenticationSessionSpec extends RedisDependantSpecification {
         "/document" | "PNOEE-30303039914-MOCK-Q"
     }
 
-    def "given null-byte in allowed interactions display text, then 400 bad request"() {
+    def "given bad char '#badCharName' in #displayTextType, then 400 bad request"() {
         given:
         def requestParameters = """
 {
@@ -85,7 +85,7 @@ class AuthenticationSessionSpec extends RedisDependantSpecification {
   "hashType" : "SHA512",
   "allowedInteractionsOrder" : [ {
     "type" : "verificationCodeChoice",
-    "displayText60" : "Special char = \\u0000"
+    ${displayTextType} : "Special char = ${badChar}"
   } ]
 }"""
 
@@ -99,9 +99,19 @@ class AuthenticationSessionSpec extends RedisDependantSpecification {
         e.status == HttpStatus.BAD_REQUEST
 
         where:
-        endpoint    | identifier
-        "/etsi"     | "PNOEE-30303039914"
-        "/document" | "PNOEE-30303039914-MOCK-Q"
+        endpoint    | identifier                 | displayTextType  | badChar  | badCharName
+        "/etsi"     | "PNOEE-30303039914"        | "displayText60"  | '\u0000' | "NUL"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText60"  | '\n'     | "LINE_FEED"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText60"  | '\r'     | "CARRIAGE_RETURN"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText200" | '\u0000' | "NUL"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText200" | '\n'     | "LINE_FEED"
+        "/etsi"     | "PNOEE-30303039914"        | "displayText200" | '\r'     | "CARRIAGE_RETURN"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText60"  | '\u0000' | "NUL"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText60"  | '\n'     | "LINE_FEED"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText60"  | '\r'     | "CARRIAGE_RETURN"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText200" | '\u0000' | "NUL"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText200" | '\n'     | "LINE_FEED"
+        "/document" | "PNOEE-30303039914-MOCK-Q" | "displayText200" | '\r'     | "CARRIAGE_RETURN"
     }
 
 }

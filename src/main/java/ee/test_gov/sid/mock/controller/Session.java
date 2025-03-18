@@ -41,9 +41,9 @@ public class Session {
         }
 
         if (inputData.getSessionType() != DataProvider.SessionType.CERTIFICATE_CHOICE
-                && inputData.getAllowedInteractionsOrder().stream().anyMatch(AllowedInteractionsOrder::containsNullByte)) {
-            log.error("Null byte in allowedInteractionsOrder display text.");
-            return nullByteBadRequest();
+                && inputData.getAllowedInteractionsOrder().stream().anyMatch(AllowedInteractionsOrder::containsBadChars)) {
+            log.warn("Bad char in allowedInteractionsOrder display text.");
+            return badRequest();
         }
 
         try {
@@ -95,7 +95,7 @@ public class Session {
         return processSession(identifier, inputData);
     }
 
-    HttpResponse<Map<String, Object>> nullByteBadRequest() {
+    HttpResponse<Map<String, Object>> badRequest() {
         Map<String, Object> responseMap = new HashMap<>();
         responseMap.put("type", "about:blank");
         responseMap.put("title", "Bad Request");
